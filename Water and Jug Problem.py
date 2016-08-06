@@ -40,3 +40,23 @@ class Solution(object):
                 
         return False
 """
+class Solution(object):
+    def canMeasureWater(self, x, y, z):
+        """
+        :type x: int
+        :type y: int
+        :type z: int
+        :rtype: bool
+        """
+        if x==0 or y==0:
+            if z==x+y or z==0:
+                return True
+            else:
+                return False
+        import fractions
+        k = fractions.gcd(x,y)
+        for i in range(0,x+y+1,k):
+            if z == i:
+                return True
+        return False
+        
