@@ -11,7 +11,7 @@ class RMQ:
 			self.d[i][0] = nums[i]
 		for j in range(1,N):
 			for i in range(M):
-				if i+(1<<j)<=M:
+				if i+(1<<(j-1))<=M:
 					self.d[i][j] = min(self.d[i][j-1],self.d[i+(1<<(j-1))][j-1])
 				
 	def query(self,p,q):
