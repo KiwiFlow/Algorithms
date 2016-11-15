@@ -6,7 +6,7 @@
 
 
 const int LIMIT = 1e6;
-const int BLOCK = sqrt(LIMIT);
+const int BLOCK = 4000;
 
 char data[LIMIT];
 
@@ -40,7 +40,7 @@ void insert(std::list<std::vector<char> > &ds, char c, int pos) {
 				(*it).push_back(c);
 			}
 			if ((*it).size() > 2 * BLOCK) {
-				std::list<std::vector<char> >::iterator insert_iter = it++;
+				std::list<std::vector<char> >::iterator insert_iter = ++it;
 				it--;
 				ds.insert(insert_iter, std::vector<char>((*it).begin() + BLOCK, (*it).end()));
 				(*it).erase((*it).begin() + BLOCK, (*it).end());
@@ -89,7 +89,6 @@ int main() {
 	}
 	return 0;
 }
-
 
 
 
