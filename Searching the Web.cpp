@@ -16,23 +16,27 @@ using namespace std;
 const int LIMIT = 100+10;
 const int LINE_LIMIT = 1500 + 10;
 
-/*struct comparer {
-	bool operator()(const pair<int, int> &lhs, const pair<int, int> &rhs) {
-		if (lhs.first == rhs.first) {
-			return lhs.second < rhs.second;
-		}
-		else {
-			return lhs.first < lhs.first;
-		}
+set<pair<int,int>> get_union(const set<pair<int, int>> &lhs, const set<pair<int, int>> &rhs) {
+	/*OR*/
+	set<pair<int, int>> ans(lhs);
+	for (auto &val : rhs) {
+		ans.insert(val);
 	}
-};*/
-
-void get_unoin(set<pair<int, int>> &lhs, set<pair<int, int>> &rhs) {
-	return;
+	return ans;
 }
 
-void get_inter(set<pair<int, int>> &lhs, set<pair<int, int>> &rhs) {
-	return;
+set<pair<int,int>> get_inter(const set<pair<int, int>> &lhs, const set<pair<int, int>> &rhs) {
+	/*AND*/
+	set<pair<int, int>> ans;
+	for (auto &val : rhs) {
+		auto left = lhs.lower_bound(make_pair(val.first, 0));
+		auto right = lhs.upper_bound(make_pair(val.first, INT_MAX));
+		for (auto it = left; it != right; it++) {
+			ans.insert(val);
+			ans.insert(*it);
+		}
+	}
+	return ans;
 }
 
 void print_ans(const vector<vector<string>> &docs,const set<pair<int, int>> &ans) {
@@ -52,15 +56,19 @@ void print_ans(const vector<vector<string>> &docs,const set<pair<int, int>> &ans
 	cout << "==========" << endl;
 }
 
+void eat_new_line_char() {
+	//吃掉换行符
+	getchar();
+}
+
 int main() {
 	//freopen("d:\\in.txt", "r", stdin);
 	//freopen("d:\\out.txt", "w", stdout);
 	string oneline;
 	int N; cin >> N;
-	getchar(); // 空行
+	eat_new_line_char();
 	vector<vector<string>> docs(LIMIT);
 	map<string, set<pair<int, int>>> indexs;
-	
 	int row = 0;
 	int doc = 0;
 	while (getline(cin, oneline))
@@ -97,7 +105,7 @@ int main() {
 	}
 
 	int m; cin >> m;
-	getchar(); // 空行
+	eat_new_line_char();
 	while (getline(cin, oneline)) {
 		string query[3];
 		stringstream ss(oneline);
@@ -116,7 +124,6 @@ int main() {
 					ans_for_this.push_back(i);
 				}
 			}
-
 			if (ans_for_this.empty()) {
 				cout << "Sorry, I found nothing." << endl;
 			}
@@ -137,31 +144,18 @@ int main() {
 			if (query[1] == "AND" || query[1] == "OR") {
 				
 				if (query[1] == "AND") {
-					//set_intersection(indexs[query[0]].begin(), indexs[query[0]].end(),
-						//indexs[query[3]].begin(), indexs[query[3]].end(), back_inserter(ans), comparer());
-					set<pair<int, int>> ans;
-					for (auto &val : indexs[query[2]]) {
-						auto left = indexs[query[0]].lower_bound(make_pair(val.first, 0));
-						auto right = indexs[query[0]].upper_bound(make_pair(val.first, INT_MAX));
-						for (auto it = left; it != right; it++) {
-							ans.insert(val);
-							ans.insert(*it);
-						}
-					}
-					print_ans(docs, ans);
+					print_ans(docs, get_inter(indexs[query[0]], indexs[query[2]]));
 				}
 				else {
 					//set_union(indexs[query[0]].begin(), indexs[query[0]].end(),
-						//indexs[query[3]].begin(), indexs[query[3]].end(), back_inserter(ans), comparer());
-					set<pair<int, int>> ans(indexs[query[0]]);
-					for (auto &val : indexs[query[2]]) {
-						ans.insert(val);
-					}
-					print_ans(docs, ans);
+					//indexs[query[3]].begin(), indexs[query[3]].end(), back_inserter(ans), comparer());
+					print_ans(docs, get_union(indexs[query[0]], indexs[query[2]]));
 				}
+				
 			}
 			else {
 				print_ans(docs, indexs[query[0]]);
+				
 			}
 		}
 	}
