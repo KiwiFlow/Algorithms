@@ -22,6 +22,12 @@ double findMedianSortedArrays(int* A, int m, int* B, int n) {
      if((m+n) % 2){
         return findKth(A,m,B,n,(m+n)/2+1)*1.0;
      }else{
-        return (findKth(A,m,B,n,(m+n)/2) + findKth(A,m,B,n,(m+n)/2)+1) / 2.0;
+        return (findKth(A,m,B,n,(m+n)/2) + findKth(A,m,B,n,(m+n)/2+1)) / 2.0;
      }
 }
+
+
+
+
+
+
